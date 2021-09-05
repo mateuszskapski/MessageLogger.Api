@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using MessageLogger.Api.Extensions;
 using System.Threading;
 
 namespace MessageLogger.Api.Controllers
@@ -21,12 +22,17 @@ namespace MessageLogger.Api.Controllers
         [HttpPost]
         public IActionResult Post(LogMessage message)
         {
+            // The message should never be null, unless validation property attributes on the model get changed/removed. 
             if (message is null)
             {
-                return BadRequest("The message could not be parsed.");
+                string errorMessage = "Invalid message received (null).";
+                
+                _logger.LogError(errorMessage);
+                
+                return BadRequest(errorMessage);
             }
 
-            _logger.LogInformation($"{message.MessageId}, {message.Date}, {message.Message} ");
+            _logger.LogReceivedMessage(message.MessageId, message.Date, message.Message);
 
             return Ok();
         }
