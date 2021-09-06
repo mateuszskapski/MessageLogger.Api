@@ -10,10 +10,10 @@ namespace MessageLogger.Api.Extensions
     {
         private static readonly EventId MessageReceived = new(1, "MessageReceived");
 
-        private static readonly Action<ILogger, Guid, DateTime, string, Exception> _logMessage =
-            LoggerMessage.Define<Guid, DateTime, string>(LogLevel.Information, MessageReceived, "{Id}, {Date}, {Message}");
+        private static readonly Action<ILogger, Guid, string, string, Exception> _logMessage =
+            LoggerMessage.Define<Guid, string, string>(LogLevel.Information, MessageReceived, "{Id}, {Date}, {Message}");
 
         public static void LogReceivedMessage(this ILogger logger, Guid messageId, DateTime date, string message) =>
-            _logMessage(logger, messageId, date, message, default);
+            _logMessage(logger, messageId, date.ToString("dd/MM/yyyy"), message, default);
     }
 }
