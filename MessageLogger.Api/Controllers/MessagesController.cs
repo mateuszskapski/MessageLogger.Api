@@ -4,11 +4,12 @@ using Microsoft.Extensions.Logging;
 using System;
 using MessageLogger.Api.Extensions;
 using System.Threading;
+using MessageLogger.Api.Attributes;
 
 namespace MessageLogger.Api.Controllers
 {
     [ApiController]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}")]
     [ApiVersion("1.0")]
     public class MessagesController : ControllerBase
     {
@@ -19,7 +20,8 @@ namespace MessageLogger.Api.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        [HttpPost]
+        [JwtAuthorize]
+        [HttpPost("messages")]
         public IActionResult Post(LogMessage message)
         {
             // The message should never be null, unless validation property attributes on the model get changed/removed. 
